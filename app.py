@@ -1,7 +1,7 @@
+import json
 import os
 from operator import itemgetter
 from typing import Annotated, List, TypedDict
-from urllib import request
 
 import requests
 from fastapi import FastAPI, HTTPException
@@ -25,6 +25,7 @@ class Question(BaseModel):
 
 class Answer(BaseModel):
     answer: str
+    sources: List[str]
 
 
 class AnswerWithSources(TypedDict):
@@ -60,7 +61,7 @@ try:
     retriever = vectorstore.as_retriever()
     logger.info("Created vectorstore and retriever")
 
-    model = ChatOllama(model=MODEL, temperature=0)
+    model = ChatOllama(model=MODEL, temperature=0, base_url=OLLAMA_BASE_URL)
     parser = StrOutputParser()
     logger.info("Initialized ChatOllama model and StrOutputParser")
 
@@ -106,23 +107,45 @@ def check_ollama_status():
             f"{OLLAMA_BASE_URL}/",
             headers={"Accept": "text/html"},
             verify=False,
-            timeout=5
+            timeout=5,
         )
         if response.status_code == 200:
             return {"status": "Ollama is running"}
         else:
-            return {"status": f"Ollama is not responding correctly. Status code: {response.status_code}"}
+            return {
+                "status": f"Ollama is not responding correctly. Status code: {response.status_code}"
+            }
     except requests.RequestException as e:
         logger.exception(f"Error checking Ollama status: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error connecting to Ollama: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error connecting to Ollama: {str(e)}"
+        )
+
 
 @app.post("/answer", response_model=Answer)
 async def answer_question(question: Question):
     try:
-        logger.info(f"Received question: {question.question}")
+        logger.info(
+            f"=========================================Received question: {question.question}"
+        )
         result = chain.invoke({"question": question.question})
         logger.info(f"Generated answer: {result}")
-        return Answer(answer=result["answer"])
+
+        # Ensure the result matches the expected structure
+        if isinstance(result, dict) and "answer" in result and "sources" in result:
+            # Parse the sources string into a list
+            try:
+                sources = json.loads(result["sources"])
+            except json.JSONDecodeError:
+                # If parsing fails, split the string by commas (adjust as needed)
+                sources = [s.strip() for s in result["sources"].strip("[]").split(",")]
+
+            return Answer(answer=result["answer"], sources=sources)
+        else:
+            logger.error(f"Unexpected result structure: {result}")
+            raise HTTPException(
+                status_code=500, detail="Unexpected response structure from the chain"
+            )
     except Exception as e:
         logger.exception(f"Error processing question: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
