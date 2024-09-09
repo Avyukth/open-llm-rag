@@ -1,2 +1,32 @@
 .trunk
 .venv
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+.env/
+
+# uv
+.uv/
+
+# If not committing the lock file (not recommended)
+# uv.lock
+# requirements.lock.txt
+
+# Logs
+*.log
+
+# FastAPI
+.pytest_cache/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+uv.lock

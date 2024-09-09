@@ -3,7 +3,7 @@ name = "open-inno"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10.11"
 dependencies = [
     "jsonpatch>=1.33",
     "langchain-community>=0.2.16",
@@ -17,4 +17,8 @@ dependencies = [
     "requests>=2.32.3",
     "ruff>=0.6.4",
     "tenacity>=8.1.0",
+    "uvicorn>=0.30.6",
+    "fastapi>=0.114.0",
+    "faiss-cpu>=1.8.0.post1",
+    "loguru>=0.7.2",
 ]
