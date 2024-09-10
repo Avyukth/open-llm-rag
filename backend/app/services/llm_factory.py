@@ -1,6 +1,8 @@
+from app.models.qa import AnswerWithSources
 from langchain.prompts import PromptTemplate
 
 from app.models import get_model_factory
+from loguru import logger
 
 
 def get_llm_chain():
@@ -20,6 +22,7 @@ def get_llm_chain():
         Question: {question}
         """
     prompt = PromptTemplate.from_template(template)
-
+    structured_model = model.with_structured_output(AnswerWithSources)
+    logger.info("Initializing prompt", prompt)
     # Implement chain creation logic
-    return model, prompt
+    return structured_model, prompt

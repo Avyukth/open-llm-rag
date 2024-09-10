@@ -75,6 +75,7 @@ def initialize_components(file_path):
         model = ChatOllama(model=MODEL, temperature=0, base_url=OLLAMA_BASE_URL)
         parser = StrOutputParser()
         logger.info("Initialized ChatOllama model and StrOutputParser")
+        logger.info("model type", type(model))
 
         template = """
         You are an assistant that provides answers to questions based on

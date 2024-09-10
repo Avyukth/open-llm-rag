@@ -4,9 +4,11 @@ from .base import ModelFactory
 from .cohere import CohereFactory
 from .ollama import OllamaFactory
 from .openai import OpenAIFactory
+from loguru import logger
 
 
 def get_model_factory() -> ModelFactory:
+    logger.info("Initializing get_model_factory")
     factories = {
         "ollama": OllamaFactory,
         "openai": OpenAIFactory,
