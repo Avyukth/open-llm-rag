@@ -1,0 +1,24 @@
+# deployments/docker/Dockerfile.backend
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install uv
+RUN pip install uv
+
+# Copy only the requirements file first to leverage Docker cache
+COPY pyproject.toml .
+
+# Create a virtual environment and install dependencies
+RUN uv venv && \
+    . .venv/bin/activate && \
+    uv pip install -r pyproject.toml
+
+# Copy the rest of the application
+COPY app.py .
+
+# Set the PATH to use the virtual environment by default
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Run the application
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
