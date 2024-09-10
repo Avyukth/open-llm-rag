@@ -1,13 +1,15 @@
-from app.models.qa import AnswerWithSources
+# from app.models.qa import AnswerWithSources
 from langchain.prompts import PromptTemplate
 
 from app.models import get_model_factory
-from loguru import logger
-
+from app.core.logger import get_logger
+logger = get_logger()
 
 def get_llm_chain():
     model_factory = get_model_factory()
     model = model_factory.get_chat_model()
+
+    logger.info("Model type", type(model))
     template = """
         You are an assistant that provides answers to questions based on
         a given context.
@@ -22,7 +24,6 @@ def get_llm_chain():
         Question: {question}
         """
     prompt = PromptTemplate.from_template(template)
-    structured_model = model.with_structured_output(AnswerWithSources)
     logger.info("Initializing prompt", prompt)
     # Implement chain creation logic
-    return structured_model, prompt
+    return model, prompt

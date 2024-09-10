@@ -3,15 +3,20 @@ from operator import itemgetter
 from typing import List, Union
 
 from langchain.vectorstores import VectorStore
-from loguru import logger
 
 from app.models.qa import Answer, AnswerWithSources, Question
 from app.services.llm_factory import get_llm_chain
+from app.core.logger import get_logger
+logger = get_logger()
 
 class QAService:
     def __init__(self, vector_store: VectorStore):
         self.model, self.prompt = get_llm_chain()
-        logger.info("Initializing llm Chain=============================", self.model, self.prompt)
+        logger.info(
+            "Initializing llm Chain=============================",
+            self.model,
+            self.prompt,
+        )
         self.retriever = vector_store.as_retriever()
         logger.info("Initializing as_retriever", self.retriever)
         self.chain = self._create_chain()
@@ -23,7 +28,7 @@ class QAService:
                 "question": itemgetter("question"),
             }
             | self.prompt
-            | self.model
+            | self.model.with_structured_output(AnswerWithSources)
         )
 
     async def answer_question(self, question: Question) -> Answer:

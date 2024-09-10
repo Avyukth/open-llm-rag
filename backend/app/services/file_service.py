@@ -2,12 +2,12 @@ import os
 import uuid
 
 from fastapi import HTTPException, UploadFile
-from loguru import logger
 
 from app.core.config import settings
 from app.services.document_service import DocumentService
 from app.services.qa_service import QAService
-
+from app.core.logger import get_logger
+logger = get_logger()
 
 class FileService:
     def __init__(self, document_service: DocumentService):
