@@ -2,11 +2,14 @@ from typing import Callable
 
 from fastapi import Depends, HTTPException
 
+from app.core.logger import get_logger
 from app.services.document_processor import PDFProcessor
 from app.services.document_service import DocumentService
 from app.services.embedding_service import OllamaEmbeddingService
 from app.services.qa_service import QAService
 from app.services.vector_store_service import FAISSVectorStoreService
+
+logger = get_logger()
 
 qa_service_instance = None
 
@@ -14,6 +17,7 @@ qa_service_instance = None
 def get_qa_service():
     global qa_service_instance
     if qa_service_instance is None:
+        logger.error("QA service not initialized. File upload required.")
         raise HTTPException(
             status_code=400,
             detail="No document has been processed yet. Please upload a file first.",
@@ -24,6 +28,7 @@ def get_qa_service():
 def set_qa_service(new_qa_service: QAService):
     global qa_service_instance
     qa_service_instance = new_qa_service
+    logger.info("QA service has been initialized")
 
 
 def get_document_processor():

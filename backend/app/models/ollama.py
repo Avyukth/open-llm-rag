@@ -3,10 +3,12 @@ from langchain_community.embeddings import OllamaEmbeddings
 from langchain_ollama import ChatOllama
 
 from app.core.config import settings
+from app.core.logger import get_logger
 
 from .base import ModelFactory
-from app.core.logger import get_logger
+
 logger = get_logger()
+
 
 class OllamaFactory(ModelFactory):
     def __init__(self):

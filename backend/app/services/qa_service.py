@@ -4,10 +4,12 @@ from typing import List, Union
 
 from langchain.vectorstores import VectorStore
 
+from app.core.logger import get_logger
 from app.models.qa import Answer, AnswerWithSources, Question
 from app.services.llm_factory import get_llm_chain
-from app.core.logger import get_logger
+
 logger = get_logger()
+
 
 class QAService:
     def __init__(self, vector_store: VectorStore):
