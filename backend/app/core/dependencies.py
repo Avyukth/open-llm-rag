@@ -5,7 +5,6 @@ from fastapi import Depends, HTTPException
 from app.core.logger import get_logger
 from app.services.document_processor import PDFProcessor
 from app.services.document_service import DocumentService
-from app.services.embedding_service import OllamaEmbeddingService
 from app.services.qa_service import QAService
 from app.services.vector_store_service import FAISSVectorStoreService
 
@@ -35,21 +34,15 @@ def get_document_processor():
     return PDFProcessor()
 
 
-def get_embedding_service():
-    return OllamaEmbeddingService()
-
-
-def get_vector_store_service(
-    embedding_service: OllamaEmbeddingService = Depends(get_embedding_service),
-):
-    return FAISSVectorStoreService(embedding_service)
+def get_vector_store_service():
+    return FAISSVectorStoreService()
 
 
 def get_document_service(
     document_processor: PDFProcessor = Depends(get_document_processor),
     vector_store_service: FAISSVectorStoreService = Depends(get_vector_store_service),
 ):
-    return DocumentService(document_processor, vector_store_service)
+    return DocumentService(vector_store_service)
 
 
 # Use a Callable type hint instead of importing FileService

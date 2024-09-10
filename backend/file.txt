@@ -1,0 +1,63 @@
+├── .env
+├── __pycache__
+│   └── main.cpython-312.pyc
+├── app
+│   ├── api
+│   │   ├── __pycache__
+│   │   │   └── routes.cpython-312.pyc
+│   │   ├── endpoints
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-312.pyc
+│   │   │   │   ├── file.cpython-312.pyc
+│   │   │   │   └── qa.cpython-312.pyc
+│   │   │   ├── file.py
+│   │   │   └── qa.py
+│   │   └── routes.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── config.cpython-312.pyc
+│   │   │   ├── dependencies.cpython-312.pyc
+│   │   │   └── logger.cpython-312.pyc
+│   │   ├── config.py
+│   │   ├── dependencies.py
+│   │   └── logger.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── anthropic.cpython-312.pyc
+│   │   │   ├── base.cpython-312.pyc
+│   │   │   ├── cohere.cpython-312.pyc
+│   │   │   ├── ollama.cpython-312.pyc
+│   │   │   ├── openai.cpython-312.pyc
+│   │   │   └── qa.cpython-312.pyc
+│   │   ├── base.py
+│   │   ├── cohere.py
+│   │   ├── ollama.py
+│   │   ├── openai.py
+│   │   └── qa.py
+│   └── services
+│       ├── __init__.py
+│       ├── __pycache__
+│       │   ├── __init__.cpython-312.pyc
+│       │   ├── document_processor.cpython-312.pyc
+│       │   ├── document_service.cpython-312.pyc
+│       │   ├── embedding_service.cpython-312.pyc
+│       │   ├── file_service.cpython-312.pyc
+│       │   ├── llm_factory.cpython-312.pyc
+│       │   ├── processor_factory.cpython-312.pyc
+│       │   ├── qa_service.cpython-312.pyc
+│       │   └── vector_store_service.cpython-312.pyc
+│       ├── document_processor.py
+│       ├── document_service.py
+│       ├── embedding_service.py
+│       ├── file_service.py
+│       ├── llm_factory.py
+│       ├── processor_factory.py
+│       ├── qa_service.py
+│       └── vector_store_service.py
+├── app.log
+└── main.py

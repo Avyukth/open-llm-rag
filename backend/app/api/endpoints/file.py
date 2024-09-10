@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 
+from app.core.config import settings
 from app.core.dependencies import get_file_service, set_qa_service
 from app.core.logger import get_logger
 from app.services.file_service import FileService
@@ -12,16 +13,11 @@ file_router = APIRouter()
 async def upload_file(
     file: UploadFile = File(...),
     original_filename: str = Form(...),
-    model_provider: str = Form(default="ollama"),  # Note the lowercase default
-    model_name: str = Form(default="llama3.1:8b"),
     file_service: FileService = Depends(get_file_service),
 ):
     logger.info(f"Received file upload request: {original_filename}")
-    logger.info(f"Selected model provider: {model_provider}, model: {model_name}")
 
-    result = await file_service.process_upload(
-        file, original_filename, model_provider, model_name
-    )
+    result = await file_service.process_upload(file, original_filename)
 
     if "qa_service" in result:
         set_qa_service(result["qa_service"])

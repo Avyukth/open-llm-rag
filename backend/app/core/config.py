@@ -1,19 +1,35 @@
+from typing import Dict
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class ProviderSettings(BaseSettings):
+    provider_type: str
+    name: str
+    base_url: str = ""
+    api_key: str = ""
 
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Document QA API"
-    MODEL_PROVIDER: str = "ollama"
-    OLLAMA_BASE_URL: str = "http://localhost:11434"
-    OPENAI_API_KEY: str = ""
-    COHERE_API_KEY: str = ""
-    UPLOAD_DIR: str = "./uploads"
+    UPLOAD_DIR: str = "./../uploads"
     WEBHOOK_URL: str = "http://localhost:8501/webhook"
-    MODEL_NAME: str = "llama3.1:8b"
 
     BACKEND_PORT: int = 8000
     FRONTEND_PORT: int = 8501
     OLLAMA_PORT: int = 11434
+
+    # LLM and Embedding settings
+    LLM: ProviderSettings = ProviderSettings(
+        provider_type="ollama", name="llama3.1:8b", base_url="http://192.168.1.7:11434"
+    )
+    EMBEDDING: ProviderSettings = ProviderSettings(
+        provider_type="ollama", name="llama3.1:8b", base_url="http://192.168.1.7:11434"
+    )
+
+    # Provider-specific API keys
+    OPENAI_API_KEY: str = ""
+    COHERE_API_KEY: str = ""
 
     # Logging settings
     LOG_LEVEL: str = "INFO"
