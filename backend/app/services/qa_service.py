@@ -1,10 +1,13 @@
 import json
 from operator import itemgetter
 from typing import List, Union
+
 from langchain.vectorstores import VectorStore
-from app.models.qa import AnswerWithSources, Question, Answer
-from app.services.llm_factory import get_llm_chain
 from loguru import logger
+
+from app.models.qa import Answer, AnswerWithSources, Question
+from app.services.llm_factory import get_llm_chain
+
 
 class QAService:
     def __init__(self, vector_store: VectorStore):
@@ -41,14 +44,14 @@ class QAService:
             return result, []
         elif isinstance(result, dict):
             # Handle dictionary result
-            if 'answer' in result and 'sources' in result:
+            if "answer" in result and "sources" in result:
                 # New format
-                answer = result['answer']
-                sources = self._parse_sources(result['sources'])
-            elif 'answer' in result:
+                answer = result["answer"]
+                sources = self._parse_sources(result["sources"])
+            elif "answer" in result:
                 # Previous format
-                answer = result['answer']
-                sources = self._parse_sources(result.get('sources', []))
+                answer = result["answer"]
+                sources = self._parse_sources(result.get("sources", []))
             else:
                 # Unexpected format
                 raise ValueError(f"Unexpected result structure: {result}")
@@ -62,7 +65,10 @@ class QAService:
                 return sources
             elif all(isinstance(s, dict) for s in sources):
                 # Handle Document objects
-                return [f"Document from {s.get('metadata', {}).get('source', 'unknown source')}" for s in sources]
+                return [
+                    f"Document from {s.get('metadata', {}).get('source', 'unknown source')}"
+                    for s in sources
+                ]
         elif isinstance(sources, str):
             try:
                 parsed_sources = json.loads(sources)

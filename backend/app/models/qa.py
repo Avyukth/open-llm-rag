@@ -1,8 +1,11 @@
-from pydantic import BaseModel, Field
 from typing import Annotated, List, TypedDict
+
+from pydantic import BaseModel, Field
+
 
 class Question(BaseModel):
     question: str
+
 
 class AnswerWithSources(TypedDict):
     """An answer to the question, with sources."""
