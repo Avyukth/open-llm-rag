@@ -1,14 +1,17 @@
+# File: pages/2_Chat.py
 from typing import List
 
 import requests
 import streamlit as st
 
-st.title("Q&A Application")
+st.title("Chat")
 
-# Define the API endpoint
-API_ENDPOINT = (
-    "http://localhost:8000/answer"  # Adjust this to your FastAPI server address
-)
+if "file_processed" not in st.session_state:
+    st.session_state.file_processed = False
+
+if not st.session_state.file_processed:
+    st.warning("Please upload and process a file before using the chat.")
+    st.stop()
 
 
 class Answer:
@@ -17,11 +20,11 @@ class Answer:
         self.sources = sources
 
 
-# Initialize session state
+API_ENDPOINT = "http://localhost:8000/answer"
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
@@ -30,13 +33,11 @@ for message in st.session_state.messages:
             for source in message["sources"]:
                 st.markdown(f"- {source}")
 
-# Chat input
 if prompt := st.chat_input("Ask a question"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Send request to FastAPI
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             response = requests.post(API_ENDPOINT, json={"question": prompt})
@@ -58,7 +59,6 @@ if prompt := st.chat_input("Ask a question"):
             else:
                 st.error(f"Error: {response.status_code} - {response.text}")
 
-# Add a button to clear the chat history
 if st.button("Clear Chat History"):
     st.session_state.messages = []
-    st.experimental_rerun()
+    st.rerun()
