@@ -20,7 +20,7 @@ class Answer:
         self.sources = sources
 
 
-API_ENDPOINT = "http://localhost:8000/answer"
+API_ENDPOINT = "http://localhost:8000/api/qa/answer"
 
 if "messages" not in st.session_state:
     st.session_state.messages = []

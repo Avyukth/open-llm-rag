@@ -106,7 +106,7 @@ def initialize_components(file_path):
         raise
 
 
-@app.post("/upload")
+@app.post("/api/files/upload")
 async def upload_file(file: UploadFile = File(...), original_filename: str = Form(...)):
     try:
         # Use the provided original filename
@@ -187,7 +187,7 @@ def check_ollama_status():
         )
 
 
-@app.post("/answer", response_model=Answer)
+@app.post("/api/qa/answer", response_model=Answer)
 async def answer_question(question: Question):
     if not vectorstore or not chain:
         raise HTTPException(

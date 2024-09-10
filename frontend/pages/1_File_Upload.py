@@ -20,7 +20,7 @@ if uploaded_file is not None:
 
     # Send file to backend for processing
     try:
-        response = requests.post("http://localhost:8000/upload", files=files, data=data)
+        response = requests.post("http://localhost:8000/api/files/upload", files=files, data=data)
 
         if response.status_code == 200:
             result = response.json()
