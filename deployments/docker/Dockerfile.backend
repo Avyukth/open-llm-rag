@@ -6,7 +6,7 @@ WORKDIR /app
 # Install uv
 RUN pip install --no-cache-dir uv
 
-# Copy only the requirements file first to leverage Docker cache
+# Copy only the pyproject.toml file first to leverage Docker cache
 COPY pyproject.toml .
 
 # Create a virtual environment and install dependencies
@@ -23,10 +23,13 @@ WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 
 # Copy the application code
-COPY app.py .
+COPY backend /app/backend
 
 # Set the PATH to use the virtual environment by default
 ENV PATH="/app/.venv/bin:$PATH"
 
+# Set the working directory to the backend folder
+WORKDIR /app/backend
+
 # Run the application
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
