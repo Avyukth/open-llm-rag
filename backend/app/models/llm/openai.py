@@ -1,7 +1,7 @@
 from langchain_openai import ChatOpenAI
 
-from ...models.base import ModelConfig
-from .base import BaseLLM
+from app.models.base import ModelConfig
+from app.models.llm.base import BaseLLM
 
 
 class OpenAILLM(BaseLLM):

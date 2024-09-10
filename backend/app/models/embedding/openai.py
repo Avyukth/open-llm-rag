@@ -1,7 +1,7 @@
 from langchain_openai.embeddings import OpenAIEmbeddings
 
-from ...models.base import ModelConfig
-from .base import BaseEmbedding
+from app.models.base import ModelConfig
+from app.models.embedding.base import BaseEmbedding
 
 
 class OpenAIEmbedding(BaseEmbedding):

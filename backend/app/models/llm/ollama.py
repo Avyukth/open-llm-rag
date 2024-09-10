@@ -2,9 +2,8 @@ import requests
 from langchain_ollama import ChatOllama
 
 from app.core.logger import get_logger
-
-from ...models.base import ModelConfig
-from .base import BaseLLM
+from app.models.base import ModelConfig
+from app.models.llm.base import BaseLLM
 
 logger = get_logger()
 

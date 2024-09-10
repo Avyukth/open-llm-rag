@@ -1,9 +1,8 @@
 from langchain_community.embeddings import OllamaEmbeddings
 
 from app.core.logger import get_logger
-
-from ...models.base import ModelConfig
-from .base import BaseEmbedding
+from app.models.base import ModelConfig
+from app.models.embedding.base import BaseEmbedding
 
 logger = get_logger()
 

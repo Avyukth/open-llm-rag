@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from ...models.base import ModelConfig
+from app.models.base import ModelConfig
 
 
 class BaseLLM(ABC):

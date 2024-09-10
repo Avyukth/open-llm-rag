@@ -1,6 +1,6 @@
 from typing import Annotated, List, TypedDict
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class Question(BaseModel):
