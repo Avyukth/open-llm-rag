@@ -16,9 +16,22 @@ class FileService:
         self.document_service = document_service
         logger.info("FileService initialized with DocumentService")
 
-    async def process_upload(self, file: UploadFile, original_filename: str):
+    async def process_upload(
+        self,
+        file: UploadFile,
+        original_filename: str,
+        model_provider: str = "ollama",
+        model_name: str = "llama3.1:8b",
+    ):
         try:
             logger.info(f"Processing upload for file: {original_filename}")
+            logger.info(
+                f"Selected model provider: {model_provider}, model: {model_name}"
+            )
+
+            # Update settings based on selected model
+            settings.MODEL_PROVIDER = model_provider.lower()  # Ensure lowercase
+            settings.MODEL_NAME = model_name
             file_name, file_extension = os.path.splitext(original_filename)
             if not file_extension:
                 file_extension = self._guess_extension(file.content_type)

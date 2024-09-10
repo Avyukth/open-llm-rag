@@ -10,6 +10,7 @@ from app.services.llm_factory import get_llm_chain
 
 logger = get_logger()
 
+
 class QAService:
     def __init__(self, vector_store: VectorStore):
         self.model, self.prompt = get_llm_chain()
