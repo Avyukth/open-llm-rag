@@ -11,18 +11,19 @@ class ProviderSettings(BaseSettings):
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Document QA API"
     UPLOAD_DIR: str = "./../uploads"
-    WEBHOOK_URL: str = "http://localhost:8501/webhook"
+    WEBHOOK_URL: str = "http://frontend:8501/webhook"
 
     BACKEND_PORT: int = 8000
     FRONTEND_PORT: int = 8501
     OLLAMA_PORT: int = 11434
+    OLLAMA_BASE_URL: str = "http://ollama:11434"
 
     # LLM and Embedding settings
     LLM: ProviderSettings = ProviderSettings(
-        provider_type="ollama", name="llama3.1:8b", base_url="http://192.168.1.7:11434"
+        provider_type="ollama", name="llama3.1:8b", base_url=OLLAMA_BASE_URL
     )
     EMBEDDING: ProviderSettings = ProviderSettings(
-        provider_type="ollama", name="llama3.1:8b", base_url="http://192.168.1.7:11434"
+        provider_type="ollama", name="llama3.1:8b", base_url=OLLAMA_BASE_URL
     )
 
     # Provider-specific API keys

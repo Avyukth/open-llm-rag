@@ -1,12 +1,12 @@
 import sys
+import uuid
 from contextvars import ContextVar
 
+from app.core.config import settings
 from fastapi import Request
 from loguru import logger as loguru_logger
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.responses import Response
-
-from app.core.config import settings
 
 # Create a context variable to store request-specific data
 request_id_context = ContextVar("request_id", default=None)
@@ -47,12 +47,18 @@ class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
-        request_id = request.headers.get("X-Request-ID", "unknown")
+        request_id = request.headers.get("X-Request-ID")
+        if not request_id:
+            request_id = str(uuid.uuid4())
+
         request_id_context.set(request_id)
 
         loguru_logger.info(f"Incoming request: {request.method} {request.url}")
         response = await call_next(request)
         loguru_logger.info(f"Request completed: {response.status_code}")
+
+        # Add the request ID to the response headers
+        response.headers["X-Request-ID"] = request_id
 
         return response
 
