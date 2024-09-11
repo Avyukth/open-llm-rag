@@ -5,6 +5,8 @@ from app.core.logger import get_logger
 from app.factories.llm_factory import get_llm
 from app.models.qa import Answer, Question, AnswerWithSources
 from operator import itemgetter
+from langchain.prompts import PromptTemplate
+
 logger = get_logger()
 
 
@@ -13,6 +15,7 @@ class QAService:
         self.vector_store = vector_store
         self.llm = get_llm()
         self.retriever = self.vector_store.as_retriever()
+        self.prompt = self._create_prompt()
         self.chain = self._create_chain()
         logger.info("QAService initialized with vector store and LLM")
 
@@ -23,8 +26,26 @@ class QAService:
                 "question": itemgetter("question"),
             }
             | self.prompt
-            | self.model.with_structured_output(AnswerWithSources)
+            | self.llm.with_structured_output(AnswerWithSources)
         )
+    
+    def _create_prompt(self):
+        template = """
+            You are an assistant that provides answers to questions based on
+            a given context. 
+
+            Answer the question based on the context. If you can't answer the
+            question, reply "I don't know".
+
+            Be as concise as possible and go straight to the point.
+
+            Context: {context}
+
+            Question: {question}
+            """
+
+        prompt = PromptTemplate.from_template(template)
+        return prompt
 
     async def answer_question(self, question: Question) -> Answer:
         # try:
@@ -52,7 +73,7 @@ class QAService:
         #     raise
         try:
             logger.info(f"Received question: {question.question}")
-            result = chain.invoke({"question": question.question})
+            result = self.chain.invoke({"question": question.question})
             logger.info(f"Generated answer: {result}")
 
             if isinstance(result, dict) and "answer" in result and "sources" in result:
