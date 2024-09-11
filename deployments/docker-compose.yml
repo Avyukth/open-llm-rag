@@ -7,7 +7,7 @@ services:
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
-      - ${UPLOADS_DIR:-../uploads}:/app/backend/upload
+      - ${UPLOADS_DIR:-./uploads}:/app/backend/uploads
       - shared_uploads:/app/backend/upload
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434

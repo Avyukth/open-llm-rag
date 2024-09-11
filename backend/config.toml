@@ -1,0 +1,38 @@
+[general]
+project_name = "Document QA API"
+upload_dir = "uploads"
+webhook_url = "http://localhost:8501/webhook"
+backend_port = 8000
+frontend_port = 8501
+
+[logging]
+LEVEL = "INFO"
+FILE = "app.log"
+ROTATION = "500 MB"
+RETENTION = "10 days"
+
+[llm]
+PROVIDER = "ollama"
+
+[llm.PROVIDERS.ollama]
+NAME = "llama3.1:8b"
+BASE_URL = "http://ollama:11434"
+API_KEY = ""
+
+[llm.PROVIDERS.openai]
+NAME = "gpt-4"
+BASE_URL = "https://api.openai.com/v1"
+API_KEY = "your-openai-api-key"
+
+[embedding]
+PROVIDER = "ollama"
+
+[embedding.PROVIDERS.ollama]
+NAME = "llama3.1:8b"
+BASE_URL = "http://ollama:11434"
+API_KEY = ""
+
+[embedding.PROVIDERS.openai]
+NAME = "text-embedding-ada-002"
+BASE_URL = "https://api.openai.com/v1"
+API_KEY = "your-openai-api-key"

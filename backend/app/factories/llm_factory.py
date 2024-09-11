@@ -9,12 +9,12 @@ logger = get_logger()
 class LLMFactory:
     @staticmethod
     def create_llm():
-        logger.info(f"Creating LLM with provider: {settings.LLM.provider_type}")
+        logger.info(f"Creating LLM with provider: {settings.LLM.PROVIDER_TYPE}")
         config = ModelConfig(
-            provider=settings.LLM.provider_type,
-            model_name=settings.LLM.name,
-            base_url=settings.LLM.base_url,
-            api_key=settings.LLM.api_key,
+            provider=settings.LLM.PROVIDER_TYPE,
+            model_name=settings.LLM.NAME,
+            base_url=settings.LLM.BASE_URL,
+            api_key=settings.LLM.API_KEY,
         )
         try:
             llm = model_service.get_llm(config)

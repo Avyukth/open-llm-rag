@@ -1,44 +1,76 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+import toml
+from pydantic import BaseModel
+from typing import Dict, Any
+import os
 
+class ProviderSettings(BaseModel):
+    PROVIDER_TYPE: str
+    NAME: str
+    BASE_URL: str = ""
+    API_KEY: str = ""
 
-class ProviderSettings(BaseSettings):
-    provider_type: str
-    name: str
-    base_url: str = ""
-    api_key: str = ""
+class LoggingSettings(BaseModel):
+    LEVEL: str
+    FILE: str
+    ROTATION: str
+    RETENTION: str
 
+class Settings(BaseModel):
+    PROJECT_NAME: str
+    UPLOAD_DIR: str
+    WEBHOOK_URL: str
+    BACKEND_PORT: int
+    FRONTEND_PORT: int
+    LOGGING: LoggingSettings
+    LLM: ProviderSettings
+    EMBEDDING: ProviderSettings
 
-class Settings(BaseSettings):
-    PROJECT_NAME: str = "Document QA API"
-    UPLOAD_DIR: str = "./../uploads"
-    WEBHOOK_URL: str = "http://frontend:8501/webhook"
+    @property
+    def LOG_LEVEL(self) -> str:
+        return self.LOGGING.LEVEL
 
-    BACKEND_PORT: int = 8000
-    FRONTEND_PORT: int = 8501
-    OLLAMA_PORT: int = 11434
-    OLLAMA_BASE_URL: str = "http://ollama:11434"
+    @property
+    def LOG_FILE(self) -> str:
+        return self.LOGGING.FILE
 
-    # LLM and Embedding settings
-    LLM: ProviderSettings = ProviderSettings(
-        provider_type="ollama", name="llama3.1:8b", base_url=OLLAMA_BASE_URL
+    @property
+    def LOG_ROTATION(self) -> str:
+        return self.LOGGING.ROTATION
+
+    @property
+    def LOG_RETENTION(self) -> str:
+        return self.LOGGING.RETENTION
+
+def load_config(config_path: str = "config.toml") -> Settings:
+    print(f"Current working directory: {os.getcwd()}")
+    print(f"Attempting to load config from: {config_path}")
+    
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"Config file not found: {config_path}")
+    
+    with open(config_path, "r") as f:
+        config_dict = toml.load(f)
+    
+    print("Loaded config:")
+    print(config_dict)
+    
+    llm_config = config_dict['llm']
+    llm_provider = llm_config['PROVIDER']
+    llm_settings = {**llm_config['PROVIDERS'][llm_provider], 'PROVIDER_TYPE': llm_provider}
+
+    embedding_config = config_dict['embedding']
+    embedding_provider = embedding_config['PROVIDER']
+    embedding_settings = {**embedding_config['PROVIDERS'][embedding_provider], 'PROVIDER_TYPE': embedding_provider}
+
+    return Settings(
+        PROJECT_NAME=config_dict['general']['project_name'],
+        UPLOAD_DIR=config_dict['general']['upload_dir'],
+        WEBHOOK_URL=config_dict['general']['webhook_url'],
+        BACKEND_PORT=config_dict['general']['backend_port'],
+        FRONTEND_PORT=config_dict['general']['frontend_port'],
+        LOGGING=LoggingSettings(**config_dict['logging']),
+        LLM=ProviderSettings(**llm_settings),
+        EMBEDDING=ProviderSettings(**embedding_settings)
     )
-    EMBEDDING: ProviderSettings = ProviderSettings(
-        provider_type="ollama", name="llama3.1:8b", base_url=OLLAMA_BASE_URL
-    )
 
-    # Provider-specific API keys
-    OPENAI_API_KEY: str = ""
-    COHERE_API_KEY: str = ""
-
-    # Logging settings
-    LOG_LEVEL: str = "INFO"
-    LOG_FILE: str = "app.log"
-    LOG_ROTATION: str = "500 MB"
-    LOG_RETENTION: str = "10 days"
-
-    model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", extra="ignore"
-    )
-
-
-settings = Settings()
+settings = load_config()

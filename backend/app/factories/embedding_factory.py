@@ -10,13 +10,13 @@ class EmbeddingFactory:
     @staticmethod
     def create_embedding_model():
         logger.info(
-            f"Creating Embedding model with provider: {settings.EMBEDDING.provider_type}"
+            f"Creating Embedding model with provider: {settings.EMBEDDING.PROVIDER_TYPE}"
         )
         config = ModelConfig(
-            provider=settings.EMBEDDING.provider_type,
-            model_name=settings.EMBEDDING.name,
-            base_url=settings.EMBEDDING.base_url,
-            api_key=settings.EMBEDDING.api_key,
+            provider=settings.EMBEDDING.PROVIDER_TYPE,
+            model_name=settings.EMBEDDING.NAME,
+            base_url=settings.EMBEDDING.BASE_URL,
+            api_key=settings.EMBEDDING.API_KEY,
         )
         try:
             embedding_model = model_service.get_embedding_model(config)
