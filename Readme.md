@@ -57,6 +57,55 @@ For production, create a `.env.production` file with appropriate values.
 
 
 
+# Frontend-Backend Interaction: PDF Upload Guide
+
+## User Guide
+
+1. **Access the Frontend**
+   - Open your web browser and navigate to: [[frontend_link](http://localhost:8501)]
+   - You will see the main interface of the RAG (Retrieval-Augmented Generation) system.
+
+2. **Upload a PDF**
+   - Look for an "Upload" or "Choose File" button on the interface.
+   - Click this button and select a PDF file from your local system.
+   - **Note**: Only PDF files are supported at the moment.
+
+3. **Submit the PDF**
+   - After selecting your PDF, click the "Submit" or "Upload" button to send the file to the backend.
+   - You may see a progress indicator while the file is being uploaded and processed.
+
+4. **Wait for Processing**
+   - The backend will process the PDF, which includes:
+     - Extracting text from the PDF
+     - Splitting the text into chunks
+     - Creating embeddings
+     - Storing the embeddings in the vector database
+   - This process may take a few moments depending on the size of the PDF.
+
+5. **Confirmation**
+   - Once processing is complete, you should see a confirmation message.
+   - The system is now ready to answer questions based on the uploaded PDF.
+
+6. **Ask Questions**
+   - Use the provided input field to ask questions about the content of the uploaded PDF.
+   - The system will retrieve relevant information and generate answers based on the PDF content.
+
+## Technical Notes
+
+- **Frontend**: The frontend is responsible for providing the user interface and handling user interactions. It sends HTTP requests to the backend API.
+
+- **Backend**: The backend is located at [[backend_link](http://localhost:8000)]. It handles file uploads, processes PDFs, and manages the RAG system's core functionality.
+
+- **Supported File Types**: Currently, only PDF files are supported. The backend should include file type validation to ensure only PDFs are processed.
+
+## Future Enhancements
+
+- Support for additional file types (e.g., .docx, .txt)
+- Multi-file upload capability
+- Progress bar for upload and processing stages
+- Preview of uploaded document content
+
+
 ## Building the Application
 
 To build both backend and frontend Docker images:
