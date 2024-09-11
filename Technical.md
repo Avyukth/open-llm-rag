@@ -1,5 +1,5 @@
 
-# Technical Report: Implementation of a RAG System for PDF-based Question Answering
+# Technical Report: Implementation of a document-based GPT for Question Answering with source
 
 ## 1. Introduction
 

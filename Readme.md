@@ -1,5 +1,5 @@
 
-# QA Application
+# Document-based GPT Application for Question Answering
 
 This is a Question-Answering application with separate backend and frontend services, utilizing Docker for containerization and Makefile for easy management.
 
