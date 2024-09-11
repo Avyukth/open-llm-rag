@@ -34,6 +34,29 @@ UPLOADS_DIR=./uploads
 
 For production, create a `.env.production` file with appropriate values.
 
+### Installation
+
+1. Clone the repository:
+
+---
+
+```
+   git clone git@github.com:Avyukth/open-llm-rag.git
+   cd open-llm-rag
+```
+
+---
+
+2. Build and run the system using the provided Makefile:
+
+---
+
+```
+   make up SERVICE1=backend SERVICE2=frontend
+```
+
+
+
 ## Building the Application
 
 To build both backend and frontend Docker images:
