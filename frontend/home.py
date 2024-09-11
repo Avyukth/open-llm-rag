@@ -1,4 +1,3 @@
-import requests
 import streamlit as st
 
 st.set_page_config(page_title="Q&A App", page_icon="🤖")
