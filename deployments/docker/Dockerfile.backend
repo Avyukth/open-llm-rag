@@ -1,0 +1,44 @@
+FROM python:3.10-slim AS builder
+
+WORKDIR /app
+
+# Install uv
+RUN pip install --no-cache-dir uv
+
+# Copy only the pyproject.toml file first to leverage Docker cache
+COPY pyproject.toml .
+
+# Create a virtual environment and install dependencies
+RUN uv venv && \
+    . .venv/bin/activate && \
+    uv pip install --no-cache-dir -r pyproject.toml && \
+    uv pip install --no-cache-dir python-multipart
+
+# Final stage
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Create a non-root user and group
+RUN groupadd -g 1000 lsgroup && \
+    useradd -u 1000 -g lsgroup -s /bin/bash -m lsuser
+
+RUN mkdir -p /app/backend/upload && chown -R lsuser:lsgroup /app
+
+# Copy the virtual environment from the builder stage
+COPY --from=builder /app/.venv /app/.venv
+
+# Copy the application code
+COPY --chown=lsuser:lsgroup backend /app/backend
+
+# Set the PATH to use the virtual environment by default
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Set the working directory to the backend folder
+WORKDIR /app/backend
+
+# Switch to the non-root user
+USER lsuser
+
+# Run the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
