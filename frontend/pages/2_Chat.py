@@ -1,4 +1,3 @@
-# File: pages/2_Chat.py
 import os
 from typing import List
 
