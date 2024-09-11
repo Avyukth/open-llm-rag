@@ -45,11 +45,10 @@ def get_document_service(
     return DocumentService(vector_store_service)
 
 
-# Use a Callable type hint instead of importing FileService
 def get_file_service(
     document_service: DocumentService = Depends(get_document_service),
 ) -> Callable:
-    from app.services.file_service import (  # Import here to avoid circular import
+    from app.services.file_service import (
         FileService,
     )
 

@@ -55,6 +55,6 @@ class FileService:
 
     def _guess_extension(self, content_type):
         logger.info(f"Guessing file extension for content type: {content_type}")
-        guessed_extension = ".bin"  # Default extension
+        guessed_extension = ".bin"
         logger.info(f"Guessed extension: {guessed_extension}")
         return guessed_extension

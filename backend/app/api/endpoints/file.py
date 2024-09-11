@@ -22,7 +22,7 @@ async def upload_file(
     if "qa_service" in result:
         set_qa_service(result["qa_service"])
         logger.info("QA service instance has been set")
-        del result["qa_service"]  # Remove from the response
+        del result["qa_service"]
 
     logger.info(f"File upload processed successfully: {original_filename}")
     return result
