@@ -1,19 +1,45 @@
-from fastapi import APIRouter, Depends, HTTPException
+import time
 
+import weave
 from app.core.dependencies import get_qa_service
 from app.core.logger import get_logger
+from app.core.wandb_utils import finish_wandb, init_wandb, log_qa_metrics
 from app.models.qa import Answer, Question
+from fastapi import APIRouter, Depends, HTTPException
 
 logger = get_logger()
 qa_router = APIRouter()
+wandb_enabled = False
 
 
+@qa_router.on_event("startup")
+async def startup_event():
+    global wandb_enabled
+    wandb_enabled = init_wandb()
+
+
+@qa_router.on_event("shutdown")
+async def shutdown_event():
+    if wandb_enabled:
+        finish_wandb()
+
+
+@weave.op()
 @qa_router.post("/answer", response_model=Answer)
 async def answer_question(question: Question, qa_service=Depends(get_qa_service)):
     try:
         logger.info("Received question request")
+        start_time = time.time()
         answer = await qa_service.answer_question(question)
+        execution_time = time.time() - start_time
         logger.info("Question answered successfully")
+
+        if wandb_enabled:
+            try:
+                log_qa_metrics(question, answer, execution_time)
+            except Exception as e:
+                logger.error(f"Error logging metrics to W&B: {str(e)}")
+
         return answer
     except Exception as e:
         logger.exception(f"Error processing question: {str(e)}")
