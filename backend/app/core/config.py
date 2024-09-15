@@ -26,6 +26,7 @@ class Settings(BaseModel):
     BACKEND_PORT: int
     FRONTEND_PORT: int
     WANDB_API_KEY: str
+    DATABASE_URL: str
     LOGGING: LoggingSettings
     LLM: ProviderSettings
     EMBEDDING: ProviderSettings
@@ -81,6 +82,7 @@ def load_config(config_path: str = "config.toml") -> Settings:
         BACKEND_PORT=config_dict["general"]["backend_port"],
         FRONTEND_PORT=config_dict["general"]["frontend_port"],
         WANDB_API_KEY=config_dict["wandb"]["wandb_api_key"],
+        DATABASE_URL=config_dict["db"]["database_url"],
         LOGGING=LoggingSettings(**config_dict["logging"]),
         LLM=ProviderSettings(**llm_settings),
         EMBEDDING=ProviderSettings(**embedding_settings),

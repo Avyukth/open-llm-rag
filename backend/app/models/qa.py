@@ -1,3 +1,5 @@
+from dataclasses import Field
+from enum import Enum
 from typing import Annotated, List, TypedDict
 
 from pydantic import BaseModel
@@ -21,3 +23,14 @@ class AnswerWithSources(TypedDict):
 class Answer(BaseModel):
     answer: str
     sources: List[str]
+
+
+class Relevance(str, Enum):
+    NON_RELEVANT = "NON_RELEVANT"
+    PARTLY_RELEVANT = "PARTLY_RELEVANT"
+    RELEVANT = "RELEVANT"
+
+
+class EvaluationResult(BaseModel):
+    relevance: Relevance
+    explanation: str

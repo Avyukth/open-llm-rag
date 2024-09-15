@@ -1,15 +1,19 @@
 import time
 
 import weave
-from app.core.dependencies import get_qa_service
+from app.core.database import engine, get_db
+from app.core.dependencies import get_evaluation_service, get_qa_service
 from app.core.logger import get_logger
 from app.core.wandb_utils import finish_wandb, init_wandb, log_qa_metrics
+from app.models.evaluation import Base
 from app.models.qa import Answer, Question
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from sqlalchemy.orm import Session
 
 logger = get_logger()
 qa_router = APIRouter()
 wandb_enabled = False
+Base.metadata.create_all(bind=engine)
 
 
 @qa_router.on_event("startup")
@@ -26,11 +30,21 @@ async def shutdown_event():
 
 @weave.op()
 @qa_router.post("/answer", response_model=Answer)
-async def answer_question(question: Question, qa_service=Depends(get_qa_service)):
+async def answer_question(
+    question: Question,
+    background_tasks: BackgroundTasks,
+    qa_service=Depends(get_qa_service),
+    evaluation_service=Depends(get_evaluation_service),
+    db: Session = Depends(get_db),
+):
     try:
         logger.info("Received question request")
         start_time = time.time()
         answer = await qa_service.answer_question(question)
+        # Add background task for evaluation and storage
+        background_tasks.add_task(
+            evaluation_service.evaluate_and_store, question.question, answer, db
+        )
         execution_time = time.time() - start_time
         logger.info("Question answered successfully")
 

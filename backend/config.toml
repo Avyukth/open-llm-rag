@@ -38,4 +38,7 @@ BASE_URL = "https://api.openai.com/v1"
 API_KEY = "your-openai-api-key"
 
 [wandb]
-wandb_api_key = "1f389e5c78e7cea9d2078e26d5776dfa8ee6querd"
+wandb_api_key = "1f389e5c78e7cea9d2078e26d5776dfa8ee6bcee"
+
+[db]
+database_url = "sqlite:///db/sql_app.db"
