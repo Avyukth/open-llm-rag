@@ -1,5 +1,3 @@
-import os
-
 import wandb
 import weave
 from app.core.config import settings
