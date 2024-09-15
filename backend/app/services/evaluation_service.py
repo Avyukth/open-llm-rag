@@ -7,6 +7,7 @@ from app.factories.llm_factory import get_llm
 from app.models.evaluation import EvaluationRecord
 from app.models.qa import Answer, EvaluationResult
 from langchain.prompts import PromptTemplate
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 logger = get_logger()
@@ -77,6 +78,7 @@ class EvaluationService:
                 question, answer.answer, answer.sources
             )
             logger.info(f"Evaluating answer, evaluation: {evaluation}")
+
             record = EvaluationRecord(
                 id=EvaluationRecord.create_id(question),
                 question=question,
@@ -86,13 +88,33 @@ class EvaluationService:
                 explanation=evaluation.explanation,
             )
 
-            db.add(record)
+            # Perform an upsert operation
+            stmt = insert(EvaluationRecord).values(
+                id=record.id,
+                question=record.question,
+                answer=record.answer,
+                sources=record.sources,
+                relevance=record.relevance,
+                explanation=record.explanation,
+            )
+
+            stmt = stmt.on_conflict_do_update(
+                index_elements=["id"],
+                set_={
+                    "answer": stmt.excluded.answer,
+                    "sources": stmt.excluded.sources,
+                    "relevance": stmt.excluded.relevance,
+                    "explanation": stmt.excluded.explanation,
+                },
+            )
+
+            db.execute(stmt)
             db.commit()
 
-            logger.info(f"Evaluation stored for question: {question}")
+            logger.info(f"Evaluation upserted for question: {question}")
         except Exception as e:
             logger.exception(f"Error in background evaluation task: {str(e)}")
-            db.rollback()  # Rollback the transaction in case of an error
+            db.rollback()
 
 
 # class QAService:

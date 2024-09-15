@@ -1,13 +1,15 @@
 import time
+from typing import Dict
 
 import weave
 from app.core.database import engine, get_db
 from app.core.dependencies import get_evaluation_service, get_qa_service
 from app.core.logger import get_logger
 from app.core.wandb_utils import finish_wandb, init_wandb, log_qa_metrics
-from app.models.evaluation import Base
+from app.models.evaluation import Base, EvaluationRecord
 from app.models.qa import Answer, Question
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 logger = get_logger()
@@ -59,4 +61,44 @@ async def answer_question(
         logger.exception(f"Error processing question: {str(e)}")
         raise HTTPException(
             status_code=500, detail="An error occurred while processing the question"
+        )
+
+
+@qa_router.get("/metrics", response_model=Dict[str, float])
+async def get_metrics(db: Session = Depends(get_db)):
+    try:
+        logger.info("Retrieving evaluation metrics")
+
+        total_evaluations = db.query(func.count(EvaluationRecord.id)).scalar()
+        relevant_evaluations = (
+            db.query(func.count(EvaluationRecord.id))
+            .filter(EvaluationRecord.relevance == "RELEVANT")
+            .scalar()
+        )
+
+        hit_rate = (
+            relevant_evaluations / total_evaluations if total_evaluations > 0 else 0
+        )
+
+        # Calculate MRR
+        evaluations = db.query(EvaluationRecord).all()
+        reciprocal_ranks = []
+        for eval in evaluations:
+            if eval.relevance == "RELEVANT":
+                reciprocal_ranks.append(1)
+            elif eval.relevance == "PARTLY_RELEVANT":
+                reciprocal_ranks.append(0.5)
+            else:
+                reciprocal_ranks.append(0)
+
+        mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+
+        metrics = {"hit_rate": hit_rate, "mrr": mrr}
+
+        logger.info("Metrics retrieved successfully")
+        return metrics
+    except Exception as e:
+        logger.exception(f"Error retrieving metrics: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail="An error occurred while retrieving metrics"
         )
