@@ -1,4 +1,3 @@
-
 # Technical Report: Implementation of a document-based GPT for Question Answering with source
 
 ## 1. Introduction
@@ -65,6 +64,7 @@ The system can be used to answer questions based on the content of the PDF docum
 This implementation demonstrates a functional RAG system capable of answering questions based on PDF content. The system leverages various components from the LangChain library and an open-source language model to achieve this functionality. The structured output enhancement provides additional context by including sources for the generated answers, increasing the system's transparency and reliability.
 
 Future improvements could include:
+
 - Fine-tuning the model for specific domains
 - Implementing more sophisticated retrieval methods
 - Expanding the system to handle multiple document types
@@ -77,7 +77,10 @@ This RAG system represents a powerful tool for information retrieval and questio
 
 <img src='artifacts/chunk.png' width="1000">
 
-
-##  Detailed Image of Retrieving and Question-Answering Flow
+## Detailed Image of Retrieving and Question-Answering Flow
 
 <img src='artifacts/question.png' width="1000">
+
+## Detailed Sequence Diagram of Retrieving and Question-Answering Flow
+
+<img src='artifacts/sequence.png' width="1000">

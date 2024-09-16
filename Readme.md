@@ -1,4 +1,3 @@
-
 # Document-based GPT Application for Question Answering
 
 This is a Question-Answering application with separate backend and frontend services, utilizing Docker for containerization and Makefile for easy management.
@@ -23,6 +22,7 @@ The project consists of the following main components:
 The application uses environment variables for configuration. Create a `.env` file in the root directory with the following variables:
 
 ---
+
 ```
 BACKEND_PORT=8000
 FRONTEND_PORT=8501
@@ -30,6 +30,7 @@ OLLAMA_PORT=11434
 OLLAMA_BASE_URL=http://ollama:11434
 UPLOADS_DIR=./uploads
 ```
+
 ---
 
 For production, create a `.env.production` file with appropriate values.
@@ -55,26 +56,30 @@ For production, create a `.env.production` file with appropriate values.
    make up SERVICE1=backend SERVICE2=frontend
 ```
 
-
+---
 
 # Frontend-Backend Interaction: PDF Upload Guide
 
 ## User Guide
 
 1. **Access the Frontend**
+
    - Open your web browser and navigate to: [[frontend_link](http://localhost:8501)]
    - You will see the main interface of the RAG (Retrieval-Augmented Generation) system.
 
 2. **Upload a PDF**
+
    - Look for an "Upload" or "Choose File" button on the interface.
    - Click this button and select a PDF file from your local system.
    - **Note**: Only PDF files are supported at the moment.
 
 3. **Submit the PDF**
+
    - After selecting your PDF, click the "Submit" or "Upload" button to send the file to the backend.
    - You may see a progress indicator while the file is being uploaded and processed.
 
 4. **Wait for Processing**
+
    - The backend will process the PDF, which includes:
      - Extracting text from the PDF
      - Splitting the text into chunks
@@ -83,6 +88,7 @@ For production, create a `.env.production` file with appropriate values.
    - This process may take a few moments depending on the size of the PDF.
 
 5. **Confirmation**
+
    - Once processing is complete, you should see a confirmation message.
    - The system is now ready to answer questions based on the uploaded PDF.
 
@@ -105,24 +111,27 @@ For production, create a `.env.production` file with appropriate values.
 - Progress bar for upload and processing stages
 - Preview of uploaded document content
 
-
 ## Building the Application
 
 To build both backend and frontend Docker images:
 
 ---
+
 ```
 make build
 ```
+
 ---
 
 To build individual services:
 
 ---
+
 ```
 make backend
 make frontend
 ```
+
 ---
 
 ## Running the Application
@@ -130,9 +139,11 @@ make frontend
 To run both services:
 
 ---
+
 ```
 make up SERVICE1=backend SERVICE2=frontend
 ```
+
 ---
 
 ## Stopping the Application
@@ -140,9 +151,11 @@ make up SERVICE1=backend SERVICE2=frontend
 To stop all services:
 
 ---
+
 ```
 make stop
 ```
+
 ---
 
 ## Viewing Logs
@@ -150,9 +163,11 @@ make stop
 To view logs from all services:
 
 ---
+
 ```
 make logs
 ```
+
 ---
 
 ## Development Helpers
@@ -160,17 +175,21 @@ make logs
 To open a shell in the backend container:
 
 ---
+
 ```
 make shell-backend
 ```
+
 ---
 
 To open a shell in the frontend container:
 
 ---
+
 ```
 make shell-frontend
 ```
+
 ---
 
 ## Cleaning Up
@@ -178,9 +197,11 @@ make shell-frontend
 To clean up Docker system (use with caution):
 
 ---
+
 ```
 make clean
 ```
+
 ---
 
 ## Available Make Commands
@@ -188,9 +209,11 @@ make clean
 For a full list of available commands:
 
 ---
+
 ```
 make help
 ```
+
 ---
 
 ## AI Model Support
@@ -202,7 +225,6 @@ Currently, this application is configured to work with Ollama for its AI model n
 - **Ollama**: Fully implemented and tested.
 - **OpenAI**: The codebase includes support for OpenAI, but it has not been thoroughly tested due to budget constraints.
 - **Cohere**: Similar to OpenAI, support for Cohere is included in the codebase but has not been extensively tested.
-
 
 ## Docker Images
 
