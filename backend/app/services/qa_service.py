@@ -1,11 +1,12 @@
 import json
-from langchain.vectorstores import VectorStore
+from operator import itemgetter
 
 from app.core.logger import get_logger
 from app.factories.llm_factory import get_llm
-from app.models.qa import Answer, Question, AnswerWithSources
-from operator import itemgetter
+from app.models.qa import Answer, AnswerWithSources, Question
+from fastapi import HTTPException
 from langchain.prompts import PromptTemplate
+from langchain.vectorstores import VectorStore
 
 logger = get_logger()
 
@@ -28,7 +29,7 @@ class QAService:
             | self.prompt
             | self.llm.with_structured_output(AnswerWithSources)
         )
-    
+
     def _create_prompt(self):
         template = """
             You are an assistant that provides answers to questions based on
@@ -57,13 +58,16 @@ class QAService:
                 try:
                     sources = json.loads(result["sources"])
                 except json.JSONDecodeError:
-                    sources = [s.strip() for s in result["sources"].strip("[]").split(",")]
+                    sources = [
+                        s.strip() for s in result["sources"].strip("[]").split(",")
+                    ]
 
                 return Answer(answer=result["answer"], sources=sources)
             else:
                 logger.error(f"Unexpected result structure: {result}")
                 raise HTTPException(
-                    status_code=500, detail="Unexpected response structure from the chain"
+                    status_code=500,
+                    detail="Unexpected response structure from the chain",
                 )
         except Exception as e:
             logger.exception(f"Error processing question: {str(e)}")

@@ -30,4 +30,7 @@ dependencies = [
   "langchain-cohere>=0.2.4",
   "langchain-openai>=0.1.23",
   "python-multipart>=0.0.9",
+  "wandb>=0.18.0",
+  "weave>=0.51.6",
+  "sqlalchemy>=2.0.34",
 ]

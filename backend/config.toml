@@ -1,5 +1,5 @@
 [general]
-project_name = "Document QA API"
+project_name = "llm-rag-oppen"
 upload_dir = "uploads"
 webhook_url = "http://localhost:8501/webhook"
 backend_port = 8000
@@ -16,7 +16,7 @@ PROVIDER = "ollama"
 
 [llm.PROVIDERS.ollama]
 NAME = "llama3.1:8b"
-BASE_URL = "http://ollama:11434"
+BASE_URL = "http://192.168.1.7:11434"
 API_KEY = ""
 
 [llm.PROVIDERS.openai]
@@ -29,10 +29,16 @@ PROVIDER = "ollama"
 
 [embedding.PROVIDERS.ollama]
 NAME = "llama3.1:8b"
-BASE_URL = "http://ollama:11434"
+BASE_URL = "http://192.168.1.7:11434"
 API_KEY = ""
 
 [embedding.PROVIDERS.openai]
 NAME = "text-embedding-ada-002"
 BASE_URL = "https://api.openai.com/v1"
 API_KEY = "your-openai-api-key"
+
+[wandb]
+wandb_api_key = "1f389e5c78e7cea9d2078e26d5776dfa8ee6bcee"
+
+[db]
+database_url = "sqlite:///db/sql_app.db"

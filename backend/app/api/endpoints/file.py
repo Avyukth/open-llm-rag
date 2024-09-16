@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Depends, File, Form, UploadFile
-
-from app.core.config import settings
 from app.core.dependencies import get_file_service, set_qa_service
 from app.core.logger import get_logger
 from app.services.file_service import FileService
+from fastapi import APIRouter, Depends, File, Form, UploadFile
 
 logger = get_logger()
 file_router = APIRouter()
