@@ -1,11 +1,10 @@
 import os
 
-from langchain.vectorstores import VectorStore
-
 from app.core.logger import get_logger
 from app.factories.embedding_factory import get_embedding_model
 from app.services.document_processor import DocumentProcessor, PDFProcessor
 from app.services.vector_store_service import VectorStoreService
+from langchain.vectorstores import VectorStore
 
 logger = get_logger()
 
@@ -31,7 +30,6 @@ class DocumentService:
         _, file_extension = os.path.splitext(file_path)
         processors = {
             ".pdf": PDFProcessor,
-            # Add more processors for other file types
         }
         processor_class = processors.get(file_extension.lower())
         if not processor_class:
