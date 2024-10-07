@@ -58,6 +58,8 @@ For production, create a `.env.production` file with appropriate values.
 
 ---
 
+Here is the [Interactive Video](https://www.loom.com/share/f341a7880529402daa50ae5275cc2527)
+
 # Frontend-Backend Interaction: PDF Upload Guide
 
 ## User Guide
