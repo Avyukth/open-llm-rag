@@ -16,7 +16,7 @@ PROVIDER = "ollama"
 
 [llm.PROVIDERS.ollama]
 NAME = "llama3.1:8b"
-BASE_URL = "http://192.168.1.7:11434"
+BASE_URL = "http://ollama:11434"
 API_KEY = ""
 
 [llm.PROVIDERS.openai]
@@ -29,7 +29,7 @@ PROVIDER = "ollama"
 
 [embedding.PROVIDERS.ollama]
 NAME = "llama3.1:8b"
-BASE_URL = "http://192.168.1.7:11434"
+BASE_URL = "http://ollama:11434"
 API_KEY = ""
 
 [embedding.PROVIDERS.openai]
